@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="#e52828">
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1920px">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_marginTop="22dp"
+                android:id="@+id/reminderTitle"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="14sp"
+                android:layout_marginEnd="35dp"
+                android:hint="Enter reminder title..." />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/reminderDescription"
+                android:textSize="14sp"
+                android:layout_below="@+id/reminderTitle"
+                android:layout_alignStart="@+id/reminderTitle"
+                android:hint="Enter reminder description..." />
+
+            <Button
+                android:text="Set Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnTime"
+                android:layout_marginTop="13dp"
+                android:layout_below="@+id/btnDate"
+                android:layout_alignStart="@+id/btnDate" />
+
+            <Button
+                android:text="Set Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnDate"
+                android:layout_marginTop="11dp"
+                android:layout_below="@+id/reminderDescription"
+                android:layout_alignEnd="@+id/reminderTitle" />
+
+            <TextView
+                android:text="01-01-1999"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textDate"
+                android:width="230dp"
+                android:height="30dp"
+                android:layout_alignStart="@+id/reminderDescription"
+                android:layout_above="@+id/btnTime"
+                android:layout_alignTop="@+id/btnDate"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:paddingTop="10px" />
+
+            <TextView
+                android:text="12:00 AM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textTime"
+                android:width="230dp"
+                android:height="30dp"
+                android:textAlignment="center"
+                android:textSize="36sp"
+                android:paddingTop="10px"
+                android:layout_alignTop="@+id/btnTime"
+                android:layout_alignStart="@+id/textDate"
+                android:layout_alignBottom="@+id/btnTime" />
+
+            <Button
+                android:text="CANCEL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnCancel"
+                android:layout_weight="1"
+                android:layout_below="@+id/btnTime"
+                android:layout_alignStart="@+id/btnTime"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="223dp" />
+
+            <Button
+                android:text="SAVE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSave"
+                android:layout_weight="1"
+                android:layout_alignBaseline="@+id/btnCancel"
+                android:layout_alignBottom="@+id/btnCancel"
+                android:layout_toStartOf="@+id/btnCancel" />
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
