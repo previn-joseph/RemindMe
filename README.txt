@@ -1,4 +1,5 @@
 TO DO***
 
-Clean up respository
-Finish the program...
+Add Editing
+Notifications
+Saving to Device
