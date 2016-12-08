@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -34,6 +35,45 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myArrayAdapter);
         listView.setTextFilterEnabled(true);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                Intent intent = new Intent(MainActivity.this, Creation.class);
+
+                DataEntry d = events.get(position);
+
+                int mYear = d.getDateToRemind().get(Calendar.YEAR);
+                int mMonth = d.getDateToRemind().get(Calendar.MONTH);
+                int mDay = d.getDateToRemind().get(Calendar.DAY_OF_MONTH);
+                int mHour = d.getDateToRemind().get(Calendar.HOUR_OF_DAY);
+                int mMinute = d.getDateToRemind().get(Calendar.MINUTE);
+
+                String name = d.getName();
+                String desc = d.getDescription();
+
+                if(name == "No Event Name")
+                    name = "";
+                if(desc == "No Event Description")
+                    desc = "";
+
+
+                intent.putExtra("isEditing", true);
+                intent.putExtra("name", name);
+                intent.putExtra("desc", desc);
+                intent.putExtra("year", mYear);
+                intent.putExtra("month", mMonth);
+                intent.putExtra("day", mDay);
+                intent.putExtra("hour", mHour);
+                intent.putExtra("minute", mMinute);
+                intent.putExtra("am", d.isAM());
+                intent.putExtra("index", position);
+
+                int requestCode = 2; // Or some number you choose
+                startActivityForResult(intent, requestCode);
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 myArrayAdapter.notifyDataSetChanged();*/
 
                 Intent intent = new Intent(MainActivity.this, Creation.class);
+                intent.putExtra("isEditing", false);
                 int requestCode = 1; // Or some number you choose
                 startActivityForResult(intent, requestCode);
 
@@ -54,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         // Collect data from the intent and use it
 
-        if(resultCode == RESULT_OK) {
+        if(resultCode == RESULT_OK && requestCode == 1) {
 
             String name = data.getStringExtra("name");
             String desc = data.getStringExtra("desc");
@@ -82,6 +123,38 @@ public class MainActivity extends AppCompatActivity {
             DataEntry e = new DataEntry(name, desc, dateCreated, timeToRemind, isAM);
 
             events.add(e);
+            myArrayAdapter.notifyDataSetChanged();
+
+        }else if(resultCode == RESULT_OK && requestCode == 2){
+
+            String name = data.getStringExtra("name");
+            String desc = data.getStringExtra("desc");
+            int mYear = data.getIntExtra("year", 1);
+            int mMonth = data.getIntExtra("month", 1);
+            int mDay = data.getIntExtra("day", 1);
+            int mHour = data.getIntExtra("hour", 1);
+            int mMinute = data.getIntExtra("minute", 1);
+            boolean isAM = data.getBooleanExtra("am", true);
+            int index = data.getIntExtra("index", -1);
+
+            if(name.trim().equals(""))
+                name = "No Event Name";
+            if(desc.trim().equals(""))
+                desc = "No Event Description";
+
+            Calendar dateCreated = Calendar.getInstance();
+            Calendar timeToRemind = Calendar.getInstance();
+            timeToRemind.set(Calendar.YEAR, mYear);
+            timeToRemind.set(Calendar.MONTH, mMonth);
+            timeToRemind.set(Calendar.DAY_OF_MONTH, mDay);
+            timeToRemind.set(Calendar.HOUR_OF_DAY, mHour);
+            timeToRemind.set(Calendar.MINUTE, mMinute);
+            timeToRemind.set(Calendar.SECOND, 0);
+
+            DataEntry e = new DataEntry(name, desc, dateCreated, timeToRemind, isAM);
+
+            events.remove(index);
+            events.add(index, e);
             myArrayAdapter.notifyDataSetChanged();
 
         }

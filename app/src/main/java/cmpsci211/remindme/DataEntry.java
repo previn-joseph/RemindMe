@@ -34,6 +34,14 @@ public class DataEntry {
         return description;
     }
 
+    public boolean isAM(){
+        return isAM;
+    }
+
+    public void setAM(boolean b){
+        isAM = b;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }

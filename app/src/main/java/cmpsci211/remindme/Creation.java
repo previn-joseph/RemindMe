@@ -32,6 +32,7 @@ public class Creation extends AppCompatActivity implements View.OnClickListener{
     Button setDateButton, setTimeButton, saveButton, cancelButton;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private boolean isAM;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,27 +53,58 @@ public class Creation extends AppCompatActivity implements View.OnClickListener{
         setDateButton.setOnClickListener(this);
         setTimeButton.setOnClickListener(this);
 
+        boolean isEditing = this.getIntent().getBooleanExtra("isEditing", false);
 
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        if(isEditing){
 
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
+            Intent i = this.getIntent();
+
+            index = i.getIntExtra("index", -1);
+            reminderTitle.setText(i.getStringExtra("name"));
+            reminderDescription.setText(i.getStringExtra("desc"));
+            mYear = i.getIntExtra("year", 0);
+            mMonth = i.getIntExtra("month", 0);
+            mDay = i.getIntExtra("day", 0);
+            mHour = i.getIntExtra("hour", 0);
+            mMinute = i.getIntExtra("minute", 0);
+            isAM = i.getBooleanExtra("am", false);
+
+        }else {
+
+            index = -1;
+
+
+            // Get Current Date
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+
+            isAM = true;
+
+        }
 
         textViewDate.setText((mMonth + 1) + "-" + (mDay) + "-" + mYear);
 
         String ending = "AM";
-        isAM = true;
         int displayHour = mHour;
 
-        if(displayHour > 12){
+        if(displayHour >= 12){
 
             isAM = false;
             ending = "PM";
-            displayHour -= 12;
+
+            if(displayHour != 12)
+                displayHour -= 12;
+
+        }else if(displayHour == 0){
+
+            isAM = true;
+            ending = "AM";
+            displayHour = 12;
 
         }
 
@@ -119,11 +151,19 @@ public class Creation extends AppCompatActivity implements View.OnClickListener{
                             isAM = true;
                             int displayHour = mHour;
 
-                            if(displayHour > 12){
+                            if(displayHour >= 12){
 
                                 isAM = false;
                                 ending = "PM";
-                                displayHour -= 12;
+
+                                if(displayHour != 12)
+                                    displayHour -= 12;
+
+                            }else if(displayHour == 0){
+
+                                isAM = true;
+                                ending = "AM";
+                                displayHour = 12;
 
                             }
 
@@ -165,6 +205,7 @@ public class Creation extends AppCompatActivity implements View.OnClickListener{
             intent.putExtra("hour", mHour);
             intent.putExtra("minute", mMinute);
             intent.putExtra("am", isAM);
+            intent.putExtra("index", index);
 
 
             setResult(RESULT_OK, intent);
