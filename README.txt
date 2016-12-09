@@ -1,5 +1,5 @@
 TO DO***
 
-Add Editing
+Saving To Device using Database
 Notifications
-Saving to Device
+Removing item when time has past
