@@ -1,10 +1,12 @@
 package cmpsci211.remindme;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,20 +19,22 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static ArrayList<DataEntry> events = new ArrayList<>();
+    public static ArrayList<DataEntry> events;
 
     ArrayAdapter<DataEntry> myArrayAdapter;
+    ArrayList<PendingIntent> alarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         ListView listView = (ListView) findViewById(R.id.list);
 
         myArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, events);
+        alarms = new ArrayList<>();
 
         listView.setAdapter(myArrayAdapter);
         listView.setTextFilterEnabled(true);
@@ -56,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     name = "";
                 if(desc == "No Event Description")
                     desc = "";
-
 
                 intent.putExtra("isEditing", true);
                 intent.putExtra("name", name);
@@ -123,7 +126,24 @@ public class MainActivity extends AppCompatActivity {
             DataEntry e = new DataEntry(name, desc, dateCreated, timeToRemind, isAM);
 
             events.add(e);
+            int index = events.size() - 1;
             myArrayAdapter.notifyDataSetChanged();
+
+            SplashScreen.savePrefs(this);
+
+            Intent intent = new Intent(this, OnetimeAlarmReceiver.class);
+
+            intent.putExtra("name", e.getName());
+            intent.putExtra("desc", e.getDescription());
+            intent.putExtra("index", index);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, alarms.size(), intent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeToRemind.getTimeInMillis(), pendingIntent);
+
+            alarms.add(pendingIntent);
+
 
         }else if(resultCode == RESULT_OK && requestCode == 2){
 
@@ -157,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
             events.add(index, e);
             myArrayAdapter.notifyDataSetChanged();
 
+            SplashScreen.savePrefs(this);
+
         }
 
     }
@@ -182,4 +204,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
